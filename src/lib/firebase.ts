@@ -76,13 +76,8 @@ export const LogoutFirebase = async (): Promise<LogoutResp> => {
 type stateProps = (user: User | null) => void
 export const authStateChange = (callback: stateProps) => {
   return onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log('Usuario conectado')
-      callback(user)
-    } else {
-      callback(null)
-      console.log('Usuario desconectado')
-    }
+    if (!user) return callback(null)
+    return callback(user)
   })
 }
 
@@ -129,11 +124,8 @@ type writeTaskRespo = {
 }
 export const writeTaskFB = async ({ title, date, completed }: Task): Promise<writeTaskRespo> => {
   try {
-    if (!taskRef || !userId) {
-      console.log('sin usuario ni referencia', { taskRef, userId })
+    if (!taskRef || !userId) return { success: false, error: 'no estás conectado' }
 
-      return { success: false, error: 'no estás conectado' }
-    }
     await set(taskRef, {
       title: title,
       date: date,
