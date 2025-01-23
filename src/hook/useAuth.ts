@@ -1,7 +1,9 @@
 import { AuthFirebase, authStateChange, LogoutFirebase, RegisterFirebase } from '@/lib/firebase'
+import { formSchema } from '@/schemas/signin-form-schema'
 import { User } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { z } from 'zod'
 
 const validateEmail = (email: FormDataEntryValue | null) => {
   if (typeof email === 'string') {
@@ -33,16 +35,9 @@ export default function useAuth({ redirecTo }: useAuthProps) {
     return () => unsuscribe()
   }, [])
 
-  const signIn = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    let email = formData.get('email')
-    let password = formData.get('password')
-    email = validateEmail(email) as string | null
-    password = validatePassword(password) as string | null
-    if (!email || !password) return setAuthState({ error: 'Credenciales incorrectas' })
-
-    //firebase
+  const signIn = async (data: z.infer<typeof formSchema>) => {
+    const email = data.email
+    const password = data.password
     setAuthState({ isLoading: true })
     const firebaseRes = await AuthFirebase({ email, password })
     if (firebaseRes.user) {
@@ -52,18 +47,9 @@ export default function useAuth({ redirecTo }: useAuthProps) {
 
     setAuthState({ error: firebaseRes.error })
   }
-  const register = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    let email = formData.get('email')
-    let password = formData.get('password')
-    let registerError = ''
-    email = validateEmail(email) as string | null
-    password = validatePassword(password) as string | null
-    registerError += !email && 'Email no válido '
-    registerError += !password && 'Contraseña no válida'
-    if (!email || !password) return setAuthState({ error: registerError })
-    //firebase
+  const register = async (data: z.infer<typeof formSchema>) => {
+    let email = data.email
+    let password = data.password
     setAuthState({ isLoading: true })
     const firebaseRes = await RegisterFirebase({ email, password })
     if (firebaseRes.user) {
