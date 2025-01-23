@@ -10,9 +10,8 @@ interface TaskListProps {
 }
 export default function TaskList() {
   const { task, writeTask } = useTaskActions()
-  console.log('task on wirte: ', { task })
   return (
-    <div className=" flex flex-col  overflow-hidden">
+    <div className=" flex flex-col flex-1 overflow-hidden">
       <AddTask writeTask={writeTask} />
 
       <ScrollArea className="w-full flex-1 rounded-md border">
