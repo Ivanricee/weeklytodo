@@ -5,23 +5,15 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
-const validateEmail = (email: FormDataEntryValue | null) => {
-  if (typeof email === 'string') {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email.trim())) return null
-    return email.trim()
-  }
+export type AuthStateProps = {
+  isLoading?: boolean
+  isAuthenticated?: boolean
+  error?: string
 }
-const validatePassword = (password: FormDataEntryValue | null) => {
-  if (typeof password === 'string' && password.trim().length >= 8) return password
-  return null
-}
-interface useAuthProps {
-  redirecTo: string
-}
-export default function useAuth({ redirecTo }: useAuthProps) {
-  const [authState, setAuthState] = useState<{ isLoading?: boolean; error?: string }>({
+export default function useAuth() {
+  const [authState, setAuthState] = useState<AuthStateProps>({
     isLoading: false,
+    isAuthenticated: false,
     error: '',
   })
   const [user, setUser] = useState<User | null>(null)
@@ -30,40 +22,42 @@ export default function useAuth({ redirecTo }: useAuthProps) {
     setAuthState({ ...authState, isLoading: true })
     const unsuscribe = authStateChange((fBUser) => {
       if (fBUser) setUser(fBUser)
-      setAuthState({ ...authState, isLoading: false })
+      setAuthState({ ...authState, isAuthenticated: true, isLoading: false })
     })
     return () => unsuscribe()
   }, [])
 
   const signIn = async (data: z.infer<typeof formSchema>) => {
+    setAuthState({ ...authState, isLoading: true })
     const email = data.email
     const password = data.password
-    setAuthState({ isLoading: true })
     const firebaseRes = await AuthFirebase({ email, password })
     if (firebaseRes.user) {
-      navigate(redirecTo)
-      return setAuthState({ isLoading: false })
+      navigate('/todo')
+      return setAuthState({ ...authState, isLoading: false })
     }
-
-    setAuthState({ error: firebaseRes.error })
+    setAuthState({ ...authState, error: firebaseRes.error, isLoading: false })
   }
   const register = async (data: z.infer<typeof formSchema>) => {
+    setAuthState({ ...authState, isLoading: true })
     let email = data.email
     let password = data.password
-    setAuthState({ isLoading: true })
     const firebaseRes = await RegisterFirebase({ email, password })
     if (firebaseRes.user) {
       firebaseRes.user
-      navigate(redirecTo)
-      return setAuthState({ isLoading: false })
+      navigate('/todo')
+      return setAuthState({ ...authState, isLoading: false })
     }
-    setAuthState({ error: firebaseRes.error })
+    setAuthState({ ...authState, error: firebaseRes.error, isLoading: false })
   }
   const logOut = async () => {
-    setAuthState({ isLoading: true })
+    setAuthState({ ...authState, isLoading: true })
     const logOutResponse = await LogoutFirebase()
-    setAuthState({ isLoading: false })
-    if (logOutResponse?.error) return setAuthState({ error: 'Ocurrió un error al cerrar sesión' })
+    if (logOutResponse?.error) {
+      return setAuthState({ ...authState, error: 'Ocurrió un error al cerrar sesión' })
+    }
+    setUser(null)
+    setAuthState({ ...authState, isLoading: false })
     return navigate('/')
   }
   return { user, signIn, register, logOut, authState }
