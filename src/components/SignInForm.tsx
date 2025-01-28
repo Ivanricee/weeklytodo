@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form } from '@/ui/form'
 import CustomFormField from '@/components/CustomFormField'
 export default function SignInForm() {
-  const { user, signIn, authState } = useAuth({ redirecTo: '/todo' })
+  const { user, signIn, authState } = useAuth()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
