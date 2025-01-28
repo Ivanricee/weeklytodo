@@ -1,5 +1,16 @@
 import { FirebaseError, initializeApp } from 'firebase/app'
-import { DatabaseReference, getDatabase, onValue, push, ref, set } from 'firebase/database'
+import {
+  DatabaseReference,
+  endAt,
+  getDatabase,
+  onValue,
+  orderByChild,
+  push,
+  query,
+  ref,
+  set,
+  startAt,
+} from 'firebase/database'
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -8,7 +19,8 @@ import {
   signOut,
   User,
 } from 'firebase/auth'
-import { snapshot } from 'node:test'
+
+import { getTaskByWeek, getWeekRange, initialWeekDays, TaskByWeek } from './utils'
 
 export const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -90,22 +102,29 @@ export type Task = {
   completed: boolean
   isLoading?: boolean
 }
-
-export const readTaskFB = (callback: (tasks: Task[]) => void) => {
+type CallbackType = (taskByWeek: TaskByWeek) => void
+export const readTaskFB = (callback: CallbackType) => {
   userId = auth.currentUser?.uid
-  onValue(ref(db, `users/${userId}/tasks`), (snapshot) => {
+
+  //dayyyy
+  const { weekStart, weekEnd, currentDay } = getWeekRange()
+  //dayyyy
+  const taskRef = ref(db, `users/${userId}/tasks`)
+  const taskQuery = query(taskRef, orderByChild('date'), startAt(weekStart), endAt(weekEnd))
+  onValue(taskQuery, (snapshot) => {
+    if (!snapshot.exists()) {
+      console.log('not task found within the date range')
+      return callback(initialWeekDays)
+    }
     const tasksFB = snapshot.val()
     if (!tasksFB) {
       console.log('tasks could not be read')
-      return callback([])
+      return callback(initialWeekDays)
     }
-    const tasks = Object.entries(tasksFB).map(([taskId, task]) => ({
-      taskId,
-      isLoading: false,
-      ...(task as Omit<Task, 'taskId'>),
-    }))
-    setTimeout(() => callback(tasks), 5000)
-    //callback(tasks)
+    const taskByWeek = getTaskByWeek(tasksFB)
+
+    //setTimeout(() => callback(tasks), 5000)
+    callback(taskByWeek)
   })
 }
 export const generateTaskId = () => {
