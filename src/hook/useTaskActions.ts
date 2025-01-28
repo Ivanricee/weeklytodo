@@ -1,37 +1,45 @@
 import { generateTaskId, readTaskFB, type Task, writeTaskFB } from '@/lib/firebase'
-import { FormEvent, useEffect, useState } from 'react'
+import { initialWeekDays, type TaskByWeek } from '@/lib/utils'
+import { addTaskSchema } from '@/schemas/addtask-schema'
+import { useEffect, useState } from 'react'
+import { z } from 'zod'
 
 type actionState = {
   loading: boolean
   error: string | null
 }
+
 export default function useTaskActions() {
-  const [task, setTask] = useState<Task[]>([])
+  const [weekTasks, setWeekTasks] = useState<TaskByWeek>(structuredClone(initialWeekDays))
   const [actionState, setActionState] = useState<actionState>({
     loading: false,
     error: null,
   })
 
   useEffect(() => {
-    readTaskFB((tasks) => setTask(tasks))
+    readTaskFB((taskByWeek) => setWeekTasks(taskByWeek))
   }, [])
-  const writeTask = async (e: FormEvent<HTMLFormElement>) => {
+
+  const getDay = (date: number) => new Date(date).getDay()
+
+  const writeTask = async (data: z.infer<typeof addTaskSchema>) => {
     setActionState((cState) => ({ ...cState, loading: true }))
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const title = formData.get('title')
+
+    const title = data.title
     const draftTaskId = generateTaskId()
-    if (typeof title === 'string' && draftTaskId) {
+    if (draftTaskId) {
       const completed = false
       const date = Date.now()
-
-      const draftTaskData = { taskId: draftTaskId, title, date, completed, isLoading: true }
-      const draftTasks = [...task, draftTaskData]
-      setTask(draftTasks)
-      const { error } = await writeTaskFB(draftTaskData)
+      const day = getDay(date)
+      const copyWeekTasks = structuredClone(weekTasks) as TaskByWeek
+      const newTask = { taskId: draftTaskId, title, date, completed, isLoading: true }
+      copyWeekTasks[day].push(newTask)
+      setWeekTasks(copyWeekTasks)
+      const { error } = await writeTaskFB(newTask)
       if (error) return setActionState({ error: error, loading: false })
       return setActionState((cState) => ({ ...cState, loading: false }))
     }
   }
-  return { task, writeTask, actionState /*deleteTask*/ }
+
+  return { weekTasks, writeTask, actionState, getDay /*deleteTask*/ }
 }
