@@ -4,48 +4,67 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 47.4% 11.2%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 47.4% 11.2%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 100% 50%;
-    --destructive-foreground: 210 40% 98%;
-    --ring: 215 20.2% 65.1%;
-    --radius: 0.5rem;
+    --background: 0 0% 97%;
+      --foreground: 0 0% 10%;
+      --muted: 0 0% 90%;
+      --muted-foreground: 0 0% 40%;
+      --popover: 0 0% 97%;
+      --popover-foreground: 0 0% 10%;
+      --border: 0 0% 85%;
+      --input: 0 0% 85%;
+      --card: 0 0% 97%;
+      --card-foreground: 0 0% 10%;
+      --primary: 35 85% 55%;
+      /* Amarillo tenue */
+      --primary-foreground: 0 0% 100%;
+      /* Blanco */
+      --secondary: 0 0% 40%;
+      /* Gris oscuro neutro */
+      --secondary-foreground: 0 0% 100%;
+      --accent: 200 20% 30%;
+      /* Verde azulado oscuro */
+      --accent-foreground: 0 0% 100%;
+      --destructive: 0 70% 45%;
+      /* Rojo */
+      --destructive-foreground: 0 0% 100%;
+      --ring: 35 85% 55%;
+      /* Amarillo suave */
+      --radius: 0.5rem;
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
-    --muted: 223 47% 11%;
-    --muted-foreground: 215.4 16.3% 56.9%;
-    --accent: 216 34% 17%;
-    --accent-foreground: 210 40% 98%;
-    --popover: 224 71% 4%;
-    --popover-foreground: 215 20.2% 65.1%;
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 1.2%;
-    --secondary: 222.2 47.4% 11.2%;
-    --secondary-foreground: 210 40% 98%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --ring: 216 34% 17%;
+    --background: 240 5% 10%;
+      /* Muy oscuro */
+      --foreground: 0 0% 90%;
+      /* Blanco */
+      --muted: 220 10% 20%;
+      /* Gris oscuro */
+      --muted-foreground: 0 0% 60%;
+      /* Gris más claro */
+      --popover: 240 5% 10%;
+      /* Fondo oscuro */
+      --popover-foreground: 0 0% 90%;
+      /* Blanco */
+      --border: 220 8% 25%;
+      --input: 220 8% 25%;
+      --card: 240 5% 10%;
+      --card-foreground: 0 0% 90%;
+      --primary: 40 90% 50%;
+      /* Amarillo anaranjado */
+      --primary-foreground: 240 5% 10%;
+      /* Oscuro */
+      --secondary: 0 0% 30%;
+      /* Gris profundo */
+      --secondary-foreground: 0 0% 90%;
+      --accent: 190 30% 35%;
+      /* Verde apagado */
+      --accent-foreground: 240 5% 10%;
+      /* Oscuro */
+      --destructive: 0 60% 50%;
+      /* Rojo */
+      --destructive-foreground: 0 0% 90%;
+      --ring: 40 90% 50%;
+      /* Amarillo vibrante */
   }
 }
 
