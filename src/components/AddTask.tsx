@@ -1,23 +1,29 @@
-import useTaskActions from '@/hook/useTaskActions'
+import { addTaskSchema } from '@/schemas/addtask-schema'
 import { Button } from '@/ui/button'
-import { Input } from '@/ui/input'
-import { Label } from '@/ui/label'
-import { FormEvent } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { Form } from '@/ui/form'
+import CustomFormField from './CustomFormField'
 
 interface AddTaskProps {
-  writeTask: (e: FormEvent<HTMLFormElement>) => void
+  writeTask: (data: z.infer<typeof addTaskSchema>) => void
 }
 export default function AddTask({ writeTask }: AddTaskProps) {
-  //const { task, writeTask } = useTaskActions()
+  const form = useForm<z.infer<typeof addTaskSchema>>({
+    defaultValues: {
+      title: '',
+    },
+    resolver: zodResolver(addTaskSchema),
+  })
   return (
-    <form className="flex flex-col gap-2" onSubmit={writeTask}>
-      <Input placeholder="Titulo de la tarea" type="text" id="title" name="title" />
-      <Label htmlFor="description"></Label>
-      <div className="flex justify-center py-2 pb-4 relative">
+    <Form {...form}>
+      <form className="flex mb-4" onSubmit={form.handleSubmit(writeTask)}>
+        <CustomFormField control={form.control} name="title" placeholder="Titulo de la tarea" />
         <Button size="sm" type="submit">
           Agregar Tarea
         </Button>
-      </div>
-    </form>
+      </form>
+    </Form>
   )
 }
