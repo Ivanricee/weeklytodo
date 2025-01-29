@@ -1,32 +1,44 @@
-import useTaskActions from '@/hook/useTaskActions'
+import useTaskActions, { actionState } from '@/hook/useTaskActions'
 import { ScrollArea } from '@/ui/scroll-area'
 import AddTask from '@/components/AddTask'
 import SkeletonTasks from './SkeletonTasks'
-import { Accordion, AccordionItem, AccordionTrigger } from '@/ui/accordion'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/ui/accordion'
 import Tasks from './Tasks'
+import { act, ReactNode } from 'react'
 
 const getDay = (day: number) => {
-  const fecha = new Date(1970, 0, day + 4) // 4 de enero de 1970 es domingo
-  const lang = navigator.language.split('-')[0]
-  return fecha.toLocaleDateString(lang, { weekday: 'long' })
+  const date = new Date()
+  const lang = navigator.language
+  date.setDate(date.getDate() - date.getDay() + day)
+  return date.toLocaleDateString(lang, { weekday: 'long' })
 }
 
 export default function TaskList() {
-  const { weekTasks, writeTask } = useTaskActions()
-  //console.log('hay algo aqui', weekTasks)
+  const { weekTasks, writeTask, actionState } = useTaskActions()
+
   return (
     <div className=" flex flex-col flex-1 overflow-hidden">
-      <AddTask writeTask={writeTask} />
-
       <ScrollArea className="w-full flex-1 rounded-md border">
         <div className="text-sm flex-wrap p-2">
           {
             <Accordion type="single" collapsible defaultValue={String(new Date().getDay())}>
-              {weekTasks.map((tasks, idx) => {
+              {weekTasks.map((_, idx, arrTasks) => {
+                //start from monday
+                const normalizedDay = idx === 6 ? 0 : idx + 1
+                const normalizedTask = arrTasks[normalizedDay]
                 return (
-                  <AccordionItem key={idx} value={String(idx + 1)}>
-                    <AccordionTrigger>{getDay(idx + 1)}</AccordionTrigger>
-                    <Tasks tasks={tasks} />
+                  <AccordionItem key={idx} value={String(normalizedDay)}>
+                    <AccordionTrigger>{getDay(normalizedDay)}</AccordionTrigger>
+                    {actionState.loading ? (
+                      <AccordionContent>
+                        <SkeletonTasks />
+                      </AccordionContent>
+                    ) : (
+                      <Tasks tasks={normalizedTask}>
+                        <p>task: {normalizedDay}</p>
+                        <AddTask writeTask={writeTask} day={normalizedDay} />
+                      </Tasks>
+                    )}
                   </AccordionItem>
                 )
               })}
@@ -36,4 +48,20 @@ export default function TaskList() {
       </ScrollArea>
     </div>
   )
+}
+
+type ContentType = {
+  actionState: actionState
+  children: ReactNode
+}
+function TaskContent({ actionState, children }: ContentType) {
+  if (actionState.loading && actionState.error) {
+    return (
+      <AccordionContent>
+        <SkeletonTasks />
+      </AccordionContent>
+    )
+  } else {
+    return children
+  }
 }
