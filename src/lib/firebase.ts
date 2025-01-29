@@ -99,6 +99,7 @@ export type Task = {
   taskId: string
   title: string
   date: number
+  day: number
   completed: boolean
   isLoading?: boolean
 }
@@ -107,7 +108,7 @@ export const readTaskFB = (callback: CallbackType) => {
   userId = auth.currentUser?.uid
 
   //dayyyy
-  const { weekStart, weekEnd, currentDay } = getWeekRange()
+  const { weekStart, weekEnd } = getWeekRange()
   //dayyyy
   const taskRef = ref(db, `users/${userId}/tasks`)
   const taskQuery = query(taskRef, orderByChild('date'), startAt(weekStart), endAt(weekEnd))
@@ -117,11 +118,8 @@ export const readTaskFB = (callback: CallbackType) => {
       return callback(initialWeekDays)
     }
     const tasksFB = snapshot.val()
-    if (!tasksFB) {
-      console.log('tasks could not be read')
-      return callback(initialWeekDays)
-    }
     const taskByWeek = getTaskByWeek(tasksFB)
+    console.log({ taskByWeek })
 
     //setTimeout(() => callback(tasks), 5000)
     callback(taskByWeek)
@@ -141,13 +139,19 @@ type writeTaskRespo = {
   success: boolean
   error?: string | null
 }
-export const writeTaskFB = async ({ title, date, completed }: Task): Promise<writeTaskRespo> => {
+export const writeTaskFB = async ({
+  title,
+  date,
+  completed,
+  day,
+}: Task): Promise<writeTaskRespo> => {
   try {
     if (!taskRef || !userId) return { success: false, error: 'no estás conectado' }
 
     await set(taskRef, {
       title: title,
       date: date,
+      day: day,
       completed: completed,
     })
 
@@ -155,6 +159,6 @@ export const writeTaskFB = async ({ title, date, completed }: Task): Promise<wri
   } catch (error) {
     console.error('Error al escribir tarea')
     console.error(error)
-    return { success: true, error: 'no se pudo escribir la tarea' }
+    return { success: true, error: 'Oops! Something went wrong. Try again. ' }
   }
 }
