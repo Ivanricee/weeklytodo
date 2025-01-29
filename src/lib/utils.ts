@@ -1,5 +1,4 @@
 import { clsx, type ClassValue } from 'clsx'
-import { DataSnapshot } from 'firebase/database'
 import { twMerge } from 'tailwind-merge'
 import { type Task } from './firebase'
 
@@ -15,21 +14,22 @@ export type TaskByWeek = Task[][]
 export const initialWeekDays: TaskByWeek = Array.from({ length: 7 }, () => [])
 
 export function getTaskByWeek(tasksFB: TasksObject): TaskByWeek {
+  const weekDays = structuredClone(initialWeekDays) as TaskByWeek
   for (const taskId in tasksFB) {
     const task = tasksFB[taskId]
-    const date = new Date(task.date)
-    const day = date.getDay()
+    const day = task.day
     const draftTask = {
       taskId,
       isLoading: false,
       ...(task as Omit<Task, 'taskId'>),
     }
-    //console.log({ day, draftTask })
+    console.log({ draftTask, day })
 
-    initialWeekDays[day - 1].push(draftTask)
+    //console.log({ day, draftTask })
+    weekDays[day].push(draftTask)
   }
 
-  return initialWeekDays
+  return weekDays
 }
 
 export function getWeekRange() {
@@ -41,5 +41,5 @@ export function getWeekRange() {
   const weekEnd = new Date(weekStart)
   weekEnd.setDate(weekStart.getDate() + 6) // Domingo de la semana actual
   weekEnd.setHours(23, 59, 59, 999)
-  return { weekStart: weekStart.getTime(), weekEnd: weekEnd.getTime(), currentDay }
+  return { weekStart: weekStart.getTime(), weekEnd: weekEnd.getTime() }
 }
