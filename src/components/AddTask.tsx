@@ -7,9 +7,10 @@ import { Form } from '@/ui/form'
 import CustomFormField from './CustomFormField'
 
 interface AddTaskProps {
-  writeTask: (data: z.infer<typeof addTaskSchema>) => void
+  writeTask: (data: z.infer<typeof addTaskSchema>, day: number) => void
+  day: number
 }
-export default function AddTask({ writeTask }: AddTaskProps) {
+export default function AddTask({ writeTask, day }: AddTaskProps) {
   const form = useForm<z.infer<typeof addTaskSchema>>({
     defaultValues: {
       title: '',
@@ -18,10 +19,10 @@ export default function AddTask({ writeTask }: AddTaskProps) {
   })
   return (
     <Form {...form}>
-      <form className="flex mb-4" onSubmit={form.handleSubmit(writeTask)}>
+      <form className="flex mb-4" onSubmit={form.handleSubmit((data) => writeTask(data, day))}>
         <CustomFormField control={form.control} name="title" placeholder="Titulo de la tarea" />
         <Button size="sm" type="submit">
-          Agregar Tarea
+          Agregar Tarea {day}
         </Button>
       </form>
     </Form>
