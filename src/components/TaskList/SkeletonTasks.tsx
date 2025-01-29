@@ -1,14 +1,11 @@
 import { Separator } from '@/ui/separator'
+import { Skeleton } from '../ui/skeleton'
 
 export default function SkeletonTasks() {
   return (
-    <div className="text-sm flex-wrap p-2">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="mr-2 mb-2">
-          <div className="h-4 w-full rounded-sm" />
-          <div className="h-4 w-full rounded-sm" />
-          <Separator className="my-2" />
-        </div>
+    <div className="flex flex-col gap-2">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <Skeleton className="w-full h-4" key={i} />
       ))}
     </div>
   )
