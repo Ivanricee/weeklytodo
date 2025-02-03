@@ -3,76 +3,61 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 97%;
-      --foreground: 0 0% 10%;
-      --muted: 0 0% 90%;
-      --muted-foreground: 0 0% 40%;
-      --popover: 0 0% 97%;
-      --popover-foreground: 0 0% 10%;
-      --border: 0 0% 85%;
-      --input: 0 0% 85%;
-      --card: 0 0% 97%;
-      --card-foreground: 0 0% 10%;
-      --primary: 35 85% 55%;
-      /* Amarillo tenue */
-      --primary-foreground: 0 0% 100%;
-      /* Blanco */
-      --secondary: 0 0% 40%;
-      /* Gris oscuro neutro */
-      --secondary-foreground: 0 0% 100%;
-      --accent: 200 20% 30%;
-      /* Verde azulado oscuro */
-      --accent-foreground: 0 0% 100%;
-      --destructive: 0 70% 45%;
-      /* Rojo */
-      --destructive-foreground: 0 0% 100%;
-      --ring: 35 85% 55%;
-      /* Amarillo suave */
-      --radius: 0.5rem;
-  }
+    :root {
+        --background: 0 0% 83.5%;
+        --foreground: 0 0% 10%;
+        --muted: 0 0% 90%;
+        --muted-foreground: 0 0% 40%;
+        --popover: 0 0% 90%;
+        --popover-foreground: 0 0% 10%;
+        --border: 0 0% 70%;
+        --input: 0 0% 70%;
+        --card: 0 0% 90%;
+        --card-foreground: 0 0% 10%;
+        --primary: 35 85% 55%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 0 0% 40%;
+        --secondary-foreground: 0 0% 100%;
+        --accent: 200 20% 30%;
+        --accent-foreground: 0 0% 100%;
+        --destructive: 0 70% 45%;
+        --destructive-foreground: 0 0% 100%;
+        --ring: 35 85% 55%;
+        --radius: 0.5rem;
+      }
 
-  .dark {
-    --background: 240 5% 10%;
-      /* Muy oscuro */
-      --foreground: 0 0% 90%;
-      /* Blanco */
+    .dark {
+      --background: 240 5% 10%;
+      --foreground: 0 0% 83.5%;
       --muted: 220 10% 20%;
-      /* Gris oscuro */
       --muted-foreground: 0 0% 60%;
-      /* Gris más claro */
       --popover: 240 5% 10%;
-      /* Fondo oscuro */
-      --popover-foreground: 0 0% 90%;
-      /* Blanco */
+      --popover-foreground: 0 0% 83.5%;
       --border: 220 8% 25%;
       --input: 220 8% 25%;
       --card: 240 5% 10%;
-      --card-foreground: 0 0% 90%;
+      --card-foreground: 0 0% 83.5%;
       --primary: 40 90% 50%;
-      /* Amarillo anaranjado */
       --primary-foreground: 240 5% 10%;
-      /* Oscuro */
       --secondary: 0 0% 30%;
-      /* Gris profundo */
-      --secondary-foreground: 0 0% 90%;
+      --secondary-foreground: 0 0% 83.5%;
       --accent: 190 30% 35%;
-      /* Verde apagado */
       --accent-foreground: 240 5% 10%;
-      /* Oscuro */
       --destructive: 0 60% 50%;
-      /* Rojo */
-      --destructive-foreground: 0 0% 90%;
+      --destructive-foreground: 0 0% 83.5%;
       --ring: 40 90% 50%;
-      /* Amarillo vibrante */
-  }
+    }
 }
 
 @layer base {
+  :root {
+    --font-rubik: 'Rubik', sans-serif;
+  }
   * {
     @apply border-border;
   }
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    font-family: var(--font-rubik);
   }
 }
