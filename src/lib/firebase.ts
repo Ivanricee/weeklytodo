@@ -119,7 +119,6 @@ export const readTaskFB = (callback: CallbackType) => {
     }
     const tasksFB = snapshot.val()
     const taskByWeek = getTaskByWeek(tasksFB)
-    console.log({ taskByWeek })
 
     //setTimeout(() => callback(tasks), 5000)
     callback(taskByWeek)
