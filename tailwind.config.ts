@@ -23,6 +23,7 @@ const config = {
         anton: 'var(--font-anton)',
         archivoNarrow: 'var(--font-archivoNarrow)',
         pontanoSans: 'var(--font-pontanoSans)',
+        rubik: 'var(--font-rubik)',
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -59,7 +60,9 @@ const config = {
           foreground: 'hsl(var(--card-foreground))',
         },
       },
-
+      boxShadow: {
+        '3xl': '34px 37px 59px -7px rgba(75,75,75,0.28)',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
