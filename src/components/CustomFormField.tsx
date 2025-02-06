@@ -15,6 +15,8 @@ interface Props {
   placeholder?: string
   label?: string
   description?: string
+  inputClass?: string
+  inputFocus?: boolean
 }
 export default function CustomFormField({
   control,
@@ -23,16 +25,25 @@ export default function CustomFormField({
   label,
   placeholder = '',
   description,
+  inputClass = '',
+  inputFocus = false,
 }: Props) {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="w-full">
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input placeholder={placeholder} {...field} type={type} />
+            <Input
+              id={name}
+              placeholder={placeholder}
+              {...field}
+              type={type}
+              className={`${inputClass}`}
+              autoFocus={true}
+            />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
