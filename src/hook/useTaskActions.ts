@@ -21,7 +21,7 @@ export default function useTaskActions() {
   }, [])
 
   const writeTask = async (data: z.infer<typeof addTaskSchema>, day: number) => {
-    setActionState({ error: null, loading: true })
+    setActionState((state) => ({ ...state, error: null }))
     const title = data.title
     const draftTaskId = generateTaskId()
     if (draftTaskId) {
@@ -34,9 +34,9 @@ export default function useTaskActions() {
       const { error } = await writeTaskFB(newTask)
       if (error) {
         setWeekTasks(structuredClone(weekTasks))
-        return setActionState({ error: error, loading: false })
+        return setActionState((state) => ({ ...state, error: error }))
       }
-      return setActionState((cState) => ({ ...cState, loading: false }))
+      //return setActionState((cState) => ({ ...cState, loading: false }))
     }
   }
 
