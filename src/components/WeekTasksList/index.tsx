@@ -3,17 +3,17 @@ import { ScrollArea } from '@/ui/scroll-area'
 import AddTask from '@/components/AddTask'
 import SkeletonTasks from './SkeletonTasks'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/ui/accordion'
-import Tasks from './TaskList'
+import TasksList from './TaskList'
 import { ReactNode } from 'react'
 import { getLongMonthDay, getLongDay } from '@/lib/utils'
 const bgDays = {
-  0: 'bg-secondary/0',
-  1: 'bg-secondary/10',
+  0: 'bg-transparent',
+  1: 'bg-secondary/5',
   2: 'bg-secondary/15',
   3: 'bg-secondary/25',
-  4: 'bg-secondary/40',
-  5: 'bg-secondary/50',
-  6: 'bg-secondary/60',
+  4: 'bg-secondary/35',
+  5: 'bg-secondary/45',
+  6: 'bg-secondary/50',
 } as Record<number, string>
 
 const currentDay = String(new Date().getDay())
@@ -31,24 +31,31 @@ export default function WeekTasksList() {
                 //start from monday
                 const normalizedDay = idx === 6 ? 0 : idx + 1
                 const normalizedTask = arrTasks[normalizedDay]
+                const areTasksEmpty = normalizedTask.length === 0
                 return (
                   <AccordionItem
                     key={idx}
                     value={String(normalizedDay)}
-                    className={`${bgDays[idx]} border-none text-foreground/75 font-rubik pl-10 py-[1.7rem]  `}
+                    className={`${bgDays[idx]} border-none text-foreground/75 font-rubik pl-10 py-[1.692rem]  `}
                   >
                     <AccordionTrigger className="text-3xl font-bold uppercase scale-y-[1.1] ">
                       {getLongDay(normalizedDay)}
                     </AccordionTrigger>
-                    <AccordionContent className="animate-in fade-in-0 slide-in-from-top-3/4 h-52">
-                      <p className="text-sm text-foreground/70 font-light pb-4">
-                        {getLongMonthDay(idx)}
-                      </p>
+                    <AccordionContent className="pr-4 animate-in fade-in-0 slide-in-from-top-3/4 h-52 relative ">
                       <TaskContent actionState={actionState} key={idx}>
-                        <Tasks tasks={normalizedTask}>
-                          <p>task: {normalizedDay}</p>
-                          <AddTask writeTask={writeTask} day={normalizedDay} />
-                        </Tasks>
+                        <div className="h-full flex flex-col gap-1 w-full">
+                          {!areTasksEmpty && (
+                            <p className="text-sm text-foreground/70 font-light pb-4">
+                              {getLongMonthDay(idx)}
+                            </p>
+                          )}
+                          <TasksList tasks={normalizedTask} />
+                          <AddTask
+                            writeTask={writeTask}
+                            day={normalizedDay}
+                            areTasksEmpty={areTasksEmpty}
+                          />
+                        </div>
                       </TaskContent>
                     </AccordionContent>
                   </AccordionItem>
@@ -69,7 +76,7 @@ type ContentType = {
 function TaskContent({ actionState, children }: ContentType) {
   if (actionState.error) {
     return (
-      <div className="animate-in fade-in-0 slide-in-from-top-3/4">
+      <div className="animate-in fade-in-0 slide-in-from-top-3/4 h-full">
         <p className="text-rose-500/80 text-sm">
           Oops! Something went wrong. Try again. {actionState.error}
         </p>
