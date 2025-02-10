@@ -1,12 +1,13 @@
 import { type Task as TaskType } from '@/lib/firebase'
 import Task from './Task'
 import { ListTodo } from 'lucide-react'
+import { ScrollArea } from '@/ui/scroll-area'
 
 export default function TaskList({ tasks }: { tasks: TaskType[] }) {
   //console.log('k es esto tio ', tasks)
 
   return (
-    <div className="flex-1 overflow-hidden">
+    <ScrollArea className="flex-1 ">
       {tasks.map((task, idx) => {
         //console.log('como aparecen las tas? ', task)
         return <Task key={idx} task={task} />
@@ -19,6 +20,6 @@ export default function TaskList({ tasks }: { tasks: TaskType[] }) {
           <p className="text-foreground/40 text-sm">Your task list is empty.</p>
         </div>
       )}
-    </div>
+    </ScrollArea>
   )
 }
