@@ -103,26 +103,32 @@ export type Task = {
   completed: boolean
   isLoading?: boolean
 }
-type CallbackType = (taskByWeek: TaskByWeek) => void
+type CallbackType = (taskByWeek: TaskByWeek, error?: string | null) => void
 export const readTaskFB = (callback: CallbackType) => {
   userId = auth.currentUser?.uid
 
-  //dayyyy
   const { weekStart, weekEnd } = getWeekRange()
-  //dayyyy
+
   const taskRef = ref(db, `users/${userId}/tasks`)
   const taskQuery = query(taskRef, orderByChild('date'), startAt(weekStart), endAt(weekEnd))
-  onValue(taskQuery, (snapshot) => {
-    if (!snapshot.exists()) {
-      console.log('not task found within the date range')
-      return callback(initialWeekDays)
-    }
-    const tasksFB = snapshot.val()
-    const taskByWeek = getTaskByWeek(tasksFB)
+  onValue(
+    taskQuery,
+    (snapshot) => {
+      if (!snapshot.exists()) {
+        console.log('not task found within the date range')
+        return callback(initialWeekDays)
+      }
+      const tasksFB = snapshot.val()
+      const taskByWeek = getTaskByWeek(tasksFB)
 
-    //setTimeout(() => callback(tasks), 5000)
-    callback(taskByWeek)
-  })
+      //setTimeout(() => callback(tasks), 5000)
+      callback(taskByWeek)
+    },
+    (error) => {
+      console.log('error: ', error.message)
+      callback(initialWeekDays, 'An error has occurred')
+    }
+  )
 }
 export const generateTaskId = () => {
   const userId = auth.currentUser?.uid
