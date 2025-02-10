@@ -10,7 +10,7 @@ import PrivateRoute from './components/PrivateRoute'
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <AuthProvider>
-      <ThemeProvider defaultTheme="dark">
+      <ThemeProvider defaultTheme="light">
         <Routes>
           <Route path="/" element={<SignIn />} />
           <Route path="/404" />
