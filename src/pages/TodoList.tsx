@@ -21,13 +21,13 @@ export default function TodoList() {
   }
 
   return (
-    <main className="container mx-auto flex flex-col gap-4 w-screen h-screen max-w-[400px] animate-in fade-in-20 slide-in-from-top-4 ">
+    <main className="container mx-auto flex flex-col gap-4 w-screen h-screen max-w-[400px] animate-in fade-in-20 slide-in-from-top-4 px-7">
       <section className="flex gap-2 justify-between w-full items-center py-4 h-24">
         <div>
           <Button variant={'outline'} onClick={logOut} disabled={authState.isLoading}>
             Log out
           </Button>
-          <p className="text-red-400 text-sm">{authState.error && <p>{authState.error} </p>}</p>
+          <p className="text-red-300 text-sm">{authState.error && <p>{authState.error} </p>}</p>
         </div>
         <p className="text-muted-foreground text-sm">Hola {user.email}</p>
       </section>
