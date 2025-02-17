@@ -23,8 +23,10 @@ export default function SignInForm() {
   const { error, isLoading } = authState
 
   return (
-    <Card className="w-full flex flex-col gap-3">
-      <CardHeader>Accede a Tu Cuenta</CardHeader>
+    <Card className="bg-transparent border-none shadow-none">
+      <CardHeader className="pt-1 pb-8 text-sm font-light text-foreground/90">
+        Accede a Tu Cuenta
+      </CardHeader>
 
       <CardContent className="flex items-center justify-center w-full h-full">
         <Form {...form}>
@@ -45,7 +47,9 @@ export default function SignInForm() {
             />
             <div className="text-sm text-red-400">{error && <p>{error}</p>}</div>
             <CardFooter className="flex justify-center p-0">
-              <Button disabled={isLoading}>Sign in</Button>
+              <Button disabled={isLoading} className="w-full">
+                Sign in
+              </Button>
             </CardFooter>
           </form>
         </Form>
