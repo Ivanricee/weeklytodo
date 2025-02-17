@@ -14,7 +14,7 @@
         --input: 0 0% 70%;
         --card: 0 0% 90%;
         --card-foreground: 0 0% 10%;
-        --primary: 35 85% 55%;
+        --primary: 20 85% 50%;
         --primary-foreground: 0 0% 100%;
         --secondary: 0 0% 40%;
         --secondary-foreground: 0 0% 100%;
@@ -22,7 +22,7 @@
         --accent-foreground: 0 0% 100%;
         --destructive: 0 70% 45%;
         --destructive-foreground: 0 0% 100%;
-        --ring: 35 85% 55%;
+        --ring: 20 85% 50%;
         --radius: 0.5rem;
       }
 
@@ -61,3 +61,4 @@
     font-family: var(--font-rubik);
   }
 }
+
