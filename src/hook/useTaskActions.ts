@@ -1,7 +1,7 @@
 import { generateTaskId, readTaskFB, writeTaskFB } from '@/lib/firebase'
 import { initialWeekDays, type TaskByWeek } from '@/lib/utils'
 import { addTaskSchema } from '@/schemas/addtask-schema'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { z } from 'zod'
 
 export type actionState = {
@@ -11,14 +11,14 @@ export type actionState = {
 
 export default function useTaskActions() {
   const [weekTasks, setWeekTasks] = useState<TaskByWeek>(structuredClone(initialWeekDays))
+  const [taskRepeated, setTaskRepeated] = useState<string | null>(null)
   const [actionState, setActionState] = useState<actionState>({
     loading: true,
     error: null,
   })
   const isInitialLoad = useRef(true)
-
-  useEffect(() => {
-    readTaskFB((taskByWeek, error) => {
+  const readTaskCB = useCallback(async () => {
+    await readTaskFB((taskByWeek, error) => {
       setWeekTasks(taskByWeek)
       if (error) setActionState((state) => ({ ...state, error: error }))
       if (isInitialLoad.current) {
@@ -26,6 +26,9 @@ export default function useTaskActions() {
         isInitialLoad.current = false
       }
     })
+  }, [])
+  useEffect(() => {
+    readTaskCB()
   }, [])
 
   const writeTask = async (data: z.infer<typeof addTaskSchema>, day: number) => {
@@ -40,6 +43,7 @@ export default function useTaskActions() {
       copyWeekTasks[day].push(newTask)
       setWeekTasks(copyWeekTasks)
       const { error } = await writeTaskFB(newTask)
+      await readTaskCB()
       if (error) {
         setWeekTasks(structuredClone(weekTasks))
         return setActionState((state) => ({ ...state, error: error }))
@@ -48,5 +52,5 @@ export default function useTaskActions() {
     }
   }
 
-  return { weekTasks, writeTask, actionState /*deleteTask*/ }
+  return { weekTasks, writeTask, actionState, setWeekTasks, taskRepeated, setTaskRepeated }
 }
