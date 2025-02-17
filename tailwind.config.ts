@@ -85,12 +85,22 @@ const config = {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
+        moveX: {
+          '0%,25%': { 'background-position': '10px bottom' },
+          '75%,100%': { 'background-position': '-30px bottom' },
+        },
+        rotate: {
+          '0%,25%': { transform: 'translate(-50%, -50%) rotate(0deg)' },
+          '75%,100%': { transform: 'translate(-55%, -55%) rotate(90deg)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'slide-out-to-left-m': 'accordion-down 0.2s ease-out',
         typingFade: 'typingEffect 0.9s ease-out forwards',
+        'move-x': 'moveX 0.5s linear infinite',
+        rotate: 'rotate 0.5s linear infinite',
       },
     },
   },
