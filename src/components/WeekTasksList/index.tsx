@@ -1,4 +1,4 @@
-import useTaskActions, { actionState } from '@/hook/useTaskActions'
+import { actionState } from '@/hook/useTaskActions'
 import { ScrollArea } from '@/ui/scroll-area'
 import AddTask from '@/components/AddTask'
 import SkeletonTasks from './SkeletonTasks'
@@ -6,6 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import TasksList from './TaskList'
 import { ReactNode } from 'react'
 import { getLongMonthDay, getLongDay } from '@/lib/utils'
+import { useTaskContext } from '@/context/TaskContext'
 const bgDays = {
   0: 'bg-transparent',
   1: 'bg-secondary/5',
@@ -19,7 +20,8 @@ const bgDays = {
 const currentDay = String(new Date().getDay())
 
 export default function WeekTasksList() {
-  const { weekTasks, writeTask, actionState } = useTaskActions()
+  const { weekTasks, actionState } = useTaskContext()
+
   return (
     <div className=" flex flex-col flex-1 overflow-hidden border-none">
       <ScrollArea className="border-none w-full flex-1 rounded-lg border">
@@ -30,7 +32,6 @@ export default function WeekTasksList() {
                 //start from monday
                 const normalizedDay = idx === 6 ? 0 : idx + 1
                 const normalizedTask = arrTasks[normalizedDay]
-                const areTasksEmpty = normalizedTask.length === 0
                 return (
                   <AccordionItem
                     key={idx}
@@ -47,11 +48,7 @@ export default function WeekTasksList() {
                         </p>
                         <TaskContent actionState={actionState} key={idx}>
                           <TasksList tasks={normalizedTask} />
-                          <AddTask
-                            writeTask={writeTask}
-                            day={normalizedDay}
-                            areTasksEmpty={areTasksEmpty}
-                          />
+                          <AddTask day={normalizedDay} />
                         </TaskContent>
                       </div>
                     </AccordionContent>
