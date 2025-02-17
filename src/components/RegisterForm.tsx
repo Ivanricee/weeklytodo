@@ -11,7 +11,7 @@ import { formSchema } from '@/schemas/signin-form-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 export default function RegisterForm() {
-  const { user, register, authState } = useAuth({ redirecTo: '/todo' })
+  const { user, register, authState } = useAuth()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -22,8 +22,10 @@ export default function RegisterForm() {
   if (user) return <Navigate replace to="/todo" />
   const { error, isLoading } = authState
   return (
-    <Card className="w-full flex flex-col gap-3">
-      <CardHeader> Bienvenido, Completa Tu Registro </CardHeader>
+    <Card className="bg-transparent border-none shadow-none">
+      <CardHeader className="pt-1 pb-8 text-sm font-light text-foreground/90">
+        Welcome, Create Your Account
+      </CardHeader>
 
       <CardContent className="flex items-center justify-center w-full h-full">
         <Form {...form}>
@@ -43,8 +45,13 @@ export default function RegisterForm() {
               placeholder="password"
             />
             <div className="text-sm text-red-400">{error && <p>{error}</p>}</div>
-            <CardFooter className="flex justify-center p-0">
-              <Button disabled={isLoading}>Register</Button>
+            <CardFooter className="flex flex-col justify-center p-0 gap-2">
+              <Button disabled={isLoading} className="w-full">
+                Register
+              </Button>
+              <Button variant="outline" className="w-full">
+                Continue as guest
+              </Button>
             </CardFooter>
           </form>
         </Form>
