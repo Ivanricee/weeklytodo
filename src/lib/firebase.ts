@@ -2,14 +2,16 @@ import { FirebaseError, initializeApp } from 'firebase/app'
 import {
   DatabaseReference,
   endAt,
+  get,
   getDatabase,
-  onValue,
   orderByChild,
   push,
   query,
   ref,
+  remove,
   set,
   startAt,
+  update,
 } from 'firebase/database'
 import {
   createUserWithEmailAndPassword,
@@ -104,31 +106,27 @@ export type Task = {
   isLoading?: boolean
 }
 type CallbackType = (taskByWeek: TaskByWeek, error?: string | null) => void
-export const readTaskFB = (callback: CallbackType) => {
+export const readTaskFB = async (callback: CallbackType) => {
   userId = auth.currentUser?.uid
 
   const { weekStart, weekEnd } = getWeekRange()
 
   const taskRef = ref(db, `users/${userId}/tasks`)
   const taskQuery = query(taskRef, orderByChild('date'), startAt(weekStart), endAt(weekEnd))
-  onValue(
-    taskQuery,
-    (snapshot) => {
-      if (!snapshot.exists()) {
-        console.log('not task found within the date range')
-        return callback(initialWeekDays)
-      }
-      const tasksFB = snapshot.val()
-      const taskByWeek = getTaskByWeek(tasksFB)
-
-      //setTimeout(() => callback(tasks), 5000)
-      callback(taskByWeek)
-    },
-    (error) => {
-      console.log('error: ', error.message)
-      callback(initialWeekDays, 'An error has occurred')
+  try {
+    const snapshot = await get(taskQuery) // Usa get() (similar a once())
+    if (!snapshot.exists()) {
+      callback(initialWeekDays)
+      return
     }
-  )
+    const tasksFB = snapshot.val()
+    const taskByWeek = getTaskByWeek(tasksFB)
+    //setTimeout(() => callback(taskByWeek), 5000)
+    callback(taskByWeek)
+  } catch (error) {
+    console.error('Error:', error)
+    callback(initialWeekDays, 'Error al cargar tareas')
+  }
 }
 export const generateTaskId = () => {
   const userId = auth.currentUser?.uid
@@ -165,5 +163,34 @@ export const writeTaskFB = async ({
     console.error('Error al escribir tarea')
     console.error(error)
     return { success: true, error: 'Oops! Something went wrong. Try again. ' }
+  }
+}
+
+type completeTask = {
+  taskId: string
+  isCompleted: boolean
+}
+export const completeTaskFB = async ({ taskId, isCompleted }: completeTask) => {
+  try {
+    if (!userId) return { success: false, error: 'no estás conectado' }
+    const updateTaskRef = ref(db, `/users/${userId}/tasks/${taskId}`)
+    await update(updateTaskRef, {
+      completed: isCompleted,
+    })
+    return { success: true, error: null }
+  } catch (error) {
+    console.error(error)
+    return { success: false, error: 'Error al actualizar tarea' }
+  }
+}
+export const removeTaskFB = async ({ taskId }: { taskId: string }) => {
+  try {
+    if (!userId) return { success: false, error: 'no estás conectado' }
+    const removeTaskRef = ref(db, `/users/${userId}/tasks/${taskId}`)
+    await remove(removeTaskRef)
+    return { success: true, error: null }
+  } catch (error) {
+    console.error(error)
+    return { success: false, error: 'Error al remover tarea' }
   }
 }
