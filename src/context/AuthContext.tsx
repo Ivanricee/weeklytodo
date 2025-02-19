@@ -8,18 +8,19 @@ interface Props {
   children: React.ReactNode
 }
 type AuthContextType = {
-  user: User | null
+  user: User | null | string
   signIn: (data: z.infer<typeof formSchema>) => void
   register: (data: z.infer<typeof formSchema>) => void
   logOut: () => void
+  logAsGuest: () => void
   authState: AuthStateProps
 }
 const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: Props) {
-  const { user, signIn, register, logOut, authState } = useAuth()
+  const { user, signIn, register, logOut, authState, logAsGuest } = useAuth()
   return (
-    <AuthContext.Provider value={{ user, signIn, register, logOut, authState }}>
+    <AuthContext.Provider value={{ user, signIn, register, logOut, authState, logAsGuest }}>
       {children}
     </AuthContext.Provider>
   )
