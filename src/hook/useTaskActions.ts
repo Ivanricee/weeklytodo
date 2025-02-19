@@ -2,7 +2,7 @@ import { generateTaskId, readTaskFB, writeTaskFB } from '@/lib/firebase'
 import { guestUser, readLocalTask, writeLocalTask } from '@/lib/localStorage'
 import { initialWeekDays, type TaskByWeek } from '@/lib/utils'
 import { addTaskSchema } from '@/schemas/addtask-schema'
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { z } from 'zod'
 
 export type actionState = {

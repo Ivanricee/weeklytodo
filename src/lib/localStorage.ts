@@ -1,4 +1,4 @@
-import { getTaskByWeek, getWeekRange, TaskByWeek } from './utils'
+import { getTaskByWeek, TaskByWeek } from './utils'
 
 const localStorage = window.localStorage
 const generateData = () => {

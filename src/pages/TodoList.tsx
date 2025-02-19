@@ -6,7 +6,6 @@ import { useAuthContext } from '@/context/AuthContext'
 import { TaskProvider } from '@/context/TaskContext'
 import { getCurrentWeekText } from '@/lib/utils'
 import { Link } from 'react-router-dom'
-import { string } from 'zod'
 
 export default function TodoList() {
   const { logOut, authState, user } = useAuthContext()
