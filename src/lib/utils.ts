@@ -23,7 +23,6 @@ export function getTaskByWeek(tasksFB: TasksObject): TaskByWeek {
       isLoading: false,
       ...(task as Omit<Task, 'taskId'>),
     }
-    //console.log({ day, draftTask })
     weekDays[day].push(draftTask)
   }
 
