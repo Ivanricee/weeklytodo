@@ -1,5 +1,6 @@
 import { useTaskContext } from '@/context/TaskContext'
 import { completeTaskFB, removeTaskFB } from '@/lib/firebase'
+import { completeLocalTask, guestUser, removeLocalTask } from '@/lib/localStorage'
 import { TaskByWeek } from '@/lib/utils'
 import { useState } from 'react'
 
@@ -27,8 +28,11 @@ export function useUpdateDeleteTask({ isCompleted }: useUpdateTaskProps) {
   })
 
   const completeTask = async ({ isCompleted, taskId }: completeTask) => {
+    const localUser = guestUser() === 'Guest'
     setTaskState((state) => ({ ...state, checked: isCompleted, isLoading: true }))
-    const { error } = await completeTaskFB({ isCompleted, taskId })
+    const { error } = !localUser
+      ? await completeTaskFB({ isCompleted, taskId })
+      : completeLocalTask({ isCompleted, taskId })
     if (error)
       return setTaskState((state) => ({ ...state, checked: !isCompleted, isLoading: false, error }))
     setTaskState((prevChecked) => ({ ...prevChecked, isLoading: false }))
@@ -39,12 +43,13 @@ export function useUpdateDeleteTask({ isCompleted }: useUpdateTaskProps) {
     day: number
   }
   const removeTask = async ({ taskId, day }: deleteTaskProps) => {
+    const localUser = guestUser() === 'Guest'
     setTaskState((state) => ({ ...state, isDeleting: true }))
     const draftWeekTasks = structuredClone(weekTasks) as TaskByWeek
     const dayDeletedTask = draftWeekTasks[day].filter((task) => task.taskId !== taskId)
     draftWeekTasks[day] = dayDeletedTask
 
-    const { error } = await removeTaskFB({ taskId })
+    const { error } = !localUser ? await removeTaskFB({ taskId }) : removeLocalTask({ taskId })
     if (error) return setTaskState((state) => ({ ...state, isDeleting: false, error }))
     setWeekTasks(draftWeekTasks)
     setTaskState((state) => ({ ...state, isDeleting: false }))
