@@ -42,7 +42,7 @@ export default function CustomFormField({
               {...field}
               type={type}
               className={`${inputClass}`}
-              autoFocus={true}
+              autoFocus={inputFocus}
             />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
