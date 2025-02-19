@@ -1,4 +1,5 @@
 import { AuthFirebase, authStateChange, LogoutFirebase, RegisterFirebase } from '@/lib/firebase'
+import { guestUser, LogoutGuest, signinAsGuest } from '@/lib/localStorage'
 import { formSchema } from '@/schemas/signin-form-schema'
 import { User } from 'firebase/auth'
 import { useEffect, useState } from 'react'
@@ -16,10 +17,17 @@ export default function useAuth() {
     isAuthenticated: false,
     error: '',
   })
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null | string>(null)
   const navigate = useNavigate()
   useEffect(() => {
     setAuthState({ ...authState, isLoading: true })
+    const guestUserName = guestUser()
+
+    if (guestUserName) {
+      setUser(guestUserName)
+      setAuthState({ ...authState, isAuthenticated: true, isLoading: false })
+      return
+    }
     const unsuscribe = authStateChange((fBUser) => {
       if (fBUser) setUser(fBUser)
       setAuthState({ ...authState, isAuthenticated: true, isLoading: false })
@@ -27,6 +35,16 @@ export default function useAuth() {
     return () => unsuscribe()
   }, [])
 
+  const logAsGuest = async () => {
+    setAuthState({ ...authState, isLoading: true })
+    const { user, error } = signinAsGuest()
+    if (user) {
+      navigate('/todo')
+      setUser(user)
+      return setAuthState({ ...authState, isLoading: false })
+    }
+    setAuthState({ ...authState, error, isLoading: false })
+  }
   const signIn = async (data: z.infer<typeof formSchema>) => {
     setAuthState({ ...authState, isLoading: true })
     const email = data.email
@@ -52,6 +70,14 @@ export default function useAuth() {
   }
   const logOut = async () => {
     setAuthState({ ...authState, isLoading: true })
+    const guestUserName = guestUser()
+    if (guestUserName) {
+      await LogoutGuest()
+      setUser(null)
+      setAuthState({ ...authState, isLoading: false })
+      return navigate('/')
+    }
+
     const logOutResponse = await LogoutFirebase()
     if (logOutResponse?.error) {
       return setAuthState({ ...authState, error: 'Ocurrió un error al cerrar sesión' })
@@ -60,5 +86,5 @@ export default function useAuth() {
     setAuthState({ ...authState, isLoading: false })
     return navigate('/')
   }
-  return { user, signIn, register, logOut, authState }
+  return { user, signIn, logAsGuest, register, logOut, authState }
 }
