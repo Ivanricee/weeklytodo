@@ -6,13 +6,14 @@ import { useAuthContext } from '@/context/AuthContext'
 import { TaskProvider } from '@/context/TaskContext'
 import { getCurrentWeekText } from '@/lib/utils'
 import { Link } from 'react-router-dom'
+import { string } from 'zod'
 
 export default function TodoList() {
   const { logOut, authState, user } = useAuthContext()
 
   if (!user) {
     return (
-      <main className="container mx-auto bg-zinc-900/20 flex flex-col gap-4 items-center justify-center w-screen h-screen">
+      <main className="container mx-auto bg-zinc-900/20 flex flex-col gap-4 items-center justify-center w-screen h-screen animate-in fade-in-20 slide-in-from-top-4">
         <h1 className="text-2xl">Usuario no encontrado</h1>
         <Button asChild>
           <Link to="/">Ir a la página de inicio</Link>
@@ -20,7 +21,7 @@ export default function TodoList() {
       </main>
     )
   }
-
+  const userName = typeof user === 'string' ? user : user.email
   return (
     <main className="container mx-auto flex flex-col gap-4 w-screen h-screen max-w-[400px] animate-in fade-in-20 slide-in-from-top-4 px-7">
       <header className="flex gap-2 justify-between w-full items-center py-4 h-24">
@@ -30,7 +31,7 @@ export default function TodoList() {
           </Button>
           <p className="text-red-300 text-sm">{authState.error && authState.error}</p>
         </div>
-        <p className="text-muted-foreground text-sm">Hola {user.email}</p>
+        <p className="text-muted-foreground text-sm">Hey, {userName}!</p>
       </header>
 
       <Card className="flex-1 flex flex-col overflow-hidden rounded-[3rem] border-[1.7px] border-secondary/50 bg-transparent shadow-3xl p-0 backdrop-blur-sm relative min-h-[33.3rem] max-h-[45.97rem]">
