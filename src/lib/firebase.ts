@@ -120,6 +120,7 @@ export const readTaskFB = async (callback: CallbackType) => {
       return
     }
     const tasksFB = snapshot.val()
+
     const taskByWeek = getTaskByWeek(tasksFB)
     //setTimeout(() => callback(taskByWeek), 5000)
     callback(taskByWeek)
@@ -134,7 +135,6 @@ export const generateTaskId = () => {
 
   taskRef = push(ref(db, `users/${userId}/tasks`))
   const taskId = taskRef.key
-  //console.log('id created from reference ', { taskId, taskRef })
 
   return taskId
 }
