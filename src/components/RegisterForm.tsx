@@ -1,7 +1,6 @@
 import { Button } from '@/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/ui/card'
 
-import useAuth from '@/hook/useAuth'
 import { Navigate } from 'react-router-dom'
 import CustomFormField from '@/components/CustomFormField'
 import { useForm } from 'react-hook-form'
@@ -9,9 +8,10 @@ import { Form } from '@/ui/form'
 import { z } from 'zod'
 import { formSchema } from '@/schemas/signin-form-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useAuthContext } from '@/context/AuthContext'
 
 export default function RegisterForm() {
-  const { user, register, authState } = useAuth()
+  const { user, register, authState } = useAuthContext()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -23,7 +23,7 @@ export default function RegisterForm() {
   const { error, isLoading } = authState
   return (
     <Card className="bg-transparent border-none shadow-none">
-      <CardHeader className="pt-1 pb-8 text-sm font-light text-foreground/90">
+      <CardHeader key="signinheader" className="pt-1 pb-8 text-sm font-light text-foreground/90">
         Welcome, Create Your Account
       </CardHeader>
 
@@ -36,6 +36,7 @@ export default function RegisterForm() {
               name="email"
               type="email"
               placeholder="ivanrice@gmail.com"
+              inputFocus
             />
             <CustomFormField
               control={form.control}
