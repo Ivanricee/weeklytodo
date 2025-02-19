@@ -44,11 +44,13 @@ export default function AddTask({ day }: AddTaskProps) {
             inputClass="p-0 focus-visible:ring-0 px-1 border-none w-full rounded-sm border-0 focus-visible:bg-input/5 placeholder:text-secondary/70"
             inputFocus={true}
           />
-          {titleValue.length >= 3 && (
-            <Button size="icon" type="submit">
-              <SendHorizonalIcon />
-            </Button>
-          )}
+          <Button
+            size="icon"
+            type="submit"
+            className={`transition-all ${titleValue.length >= 3 ? 'opacity-100' : 'opacity-0'}`}
+          >
+            <SendHorizonalIcon />
+          </Button>
         </form>
       </Form>
     </div>
