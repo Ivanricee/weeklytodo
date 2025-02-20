@@ -52,7 +52,7 @@ export default function useAuth() {
     const firebaseRes = await AuthFirebase({ email, password })
     if (firebaseRes.user) {
       navigate('/todo')
-      return setAuthState({ ...authState, isLoading: false })
+      return setAuthState({ ...authState, error: '', isLoading: false })
     }
     setAuthState({ ...authState, error: firebaseRes.error, isLoading: false })
   }
