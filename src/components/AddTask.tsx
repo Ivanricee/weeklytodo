@@ -34,23 +34,27 @@ export default function AddTask({ day }: AddTaskProps) {
     form.reset()
   })
   return (
-    <div className={` overflow-hidden w-full backdrop-blur-2xl `}>
+    <div className={` overflow-hidden w-full `}>
       <Form {...form}>
         <form className="flex w-full" onSubmit={onSubmit}>
           <CustomFormField
             control={form.control}
             name="title"
             placeholder="Add a new task..."
-            inputClass="p-0 focus-visible:ring-0 px-1 border-none w-full rounded-sm border-0 focus-visible:bg-input/5 placeholder:text-secondary/70"
+            inputClass="p-0 rounded-sm bg-transparent focus-visible:ring-0 px-1 border-none w-full rounded-sm border-0
+            focus-visible:bg-secondary/5 placeholder:text-secondary/70 shadow-none px-2"
             inputFocus={true}
           />
-          <Button
-            size="icon"
-            type="submit"
-            className={`transition-all ${titleValue.length >= 3 ? 'opacity-100' : 'opacity-0'}`}
-          >
-            <SendHorizonalIcon />
-          </Button>
+          {titleValue.length >= 3 && (
+            <Button
+              key="submittask"
+              size="icon"
+              type="submit"
+              className={`transition-all animate-in fade-in-0 duration-300`}
+            >
+              <SendHorizonalIcon />
+            </Button>
+          )}
         </form>
       </Form>
     </div>
