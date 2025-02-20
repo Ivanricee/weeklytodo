@@ -64,7 +64,7 @@ export default function useAuth() {
     if (firebaseRes.user) {
       firebaseRes.user
       navigate('/todo')
-      return setAuthState({ ...authState, isLoading: false })
+      return setAuthState({ ...authState, error: '', isLoading: false })
     }
     setAuthState({ ...authState, error: firebaseRes.error, isLoading: false })
   }
