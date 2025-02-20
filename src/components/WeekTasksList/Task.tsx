@@ -16,7 +16,7 @@ export default function Task({ task }: { task: Task }) {
   const isTaskRepeated = taskRepeated === task.title
   return (
     <AnimatedWrapper>
-      <div className="flex flex-nowrap transition-all duration-500 ease-in-out items-start gap-1 group">
+      <div className="flex flex-nowrap transition-all duration-300 ease-in-out items-start gap-1 group">
         {task.isLoading ? (
           <Loader />
         ) : (
