@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuthContext } from '@/context/AuthContext'
 
 export default function RegisterForm() {
-  const { user, register, authState } = useAuthContext()
+  const { user, register, authState, logAsGuest } = useAuthContext()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,7 +50,7 @@ export default function RegisterForm() {
               <Button disabled={isLoading} className="w-full">
                 Register
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" type="button" onClick={logAsGuest}>
                 Continue as guest
               </Button>
             </CardFooter>
