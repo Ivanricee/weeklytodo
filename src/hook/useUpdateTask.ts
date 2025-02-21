@@ -4,11 +4,6 @@ import { completeLocalTask, guestUser, removeLocalTask } from '@/lib/localStorag
 import { TaskByWeek } from '@/lib/utils'
 import { useState } from 'react'
 
-type completeTask = {
-  taskId: string
-  isCompleted: boolean
-}
-
 interface useUpdateTaskProps {
   isCompleted: boolean
 }
@@ -26,15 +21,26 @@ export function useUpdateDeleteTask({ isCompleted }: useUpdateTaskProps) {
     isDeleting: false,
     error: null,
   })
-
-  const completeTask = async ({ isCompleted, taskId }: completeTask) => {
+  type completeTask = {
+    taskId: string
+    isCompleted: boolean
+    day: number
+  }
+  const completeTask = async ({ isCompleted, taskId, day }: completeTask) => {
     const localUser = guestUser() === 'Guest'
     setTaskState((state) => ({ ...state, checked: isCompleted, isLoading: true }))
+    const draftWeekTasks = structuredClone(weekTasks) as TaskByWeek
+    draftWeekTasks[day].map((task) => {
+      task.taskId === taskId && (task.completed = isCompleted)
+      return task
+    })
+
     const { error } = !localUser
       ? await completeTaskFB({ isCompleted, taskId })
       : completeLocalTask({ isCompleted, taskId })
     if (error)
       return setTaskState((state) => ({ ...state, checked: !isCompleted, isLoading: false, error }))
+    setWeekTasks(draftWeekTasks)
     setTaskState((prevChecked) => ({ ...prevChecked, isLoading: false }))
   }
 

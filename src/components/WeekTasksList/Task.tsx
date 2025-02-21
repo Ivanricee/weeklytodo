@@ -24,7 +24,7 @@ export default function Task({ task }: { task: Task }) {
             checked={taskState.checked}
             disabled={taskState.isLoading || taskState.isDeleting}
             onCheckedChange={(checked) =>
-              completeTask({ taskId: task.taskId, isCompleted: checked as boolean })
+              completeTask({ taskId: task.taskId, isCompleted: checked as boolean, day: task.day })
             }
             className="border-secondary data-[state=checked]:border-primary peer"
           />
