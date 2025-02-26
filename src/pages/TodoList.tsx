@@ -23,7 +23,7 @@ export default function TodoList() {
   }
   const userName = typeof user === 'string' ? user : user.email
   return (
-    <main className="container mx-auto flex flex-col gap-4 w-screen h-screen max-w-[400px] animate-in fade-in-20 slide-in-from-top-4 px-7">
+    <main className="container mx-auto flex flex-col gap-4 w-screen h-screen max-w-[400px] animate-in fade-in-20 slide-in-from-top-4 px-0">
       <header className="flex gap-2 justify-between w-full items-center py-4 h-20">
         <div>
           <Button variant={'outline'} onClick={logOut} disabled={authState.isLoading}>
@@ -31,7 +31,7 @@ export default function TodoList() {
           </Button>
           <p className="text-red-300 text-sm">{authState.error && authState.error}</p>
         </div>
-        <p className="text-muted-foreground text-sm">Hey, {userName}!</p>
+        <p className="text-foreground/70 text-sm">Hey, {userName}!</p>
       </header>
 
       <Card className="flex-1 flex flex-col overflow-hidden rounded-[3rem] border-[1.7px] border-secondary/50 bg-transparent shadow-3xl p-0 backdrop-blur-sm relative min-h-[33.3rem] max-h-[45.97rem]">
@@ -43,12 +43,12 @@ export default function TodoList() {
           <WeekTasksList />
         </TaskProvider>
       </Card>
-      <footer className="flex flex-col items-center gap-4 text-sm text-secondary font-light pt-5">
+      <footer className="flex flex-col items-center gap-4 text-sm text-foreground/70 font-light pt-5">
         <p className="text-center">
           Educational practice project Inspired by{' '}
           <a
             href="https://weekstack.io/"
-            className="text-primary hover:underline"
+            className="text-primary hover:underline font-normal"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -81,7 +81,7 @@ export default function TodoList() {
           >
             <LinkedinIcon size={16} />
             <span>
-              <b className="text-secondary/90 group-hover:text-foreground/70 transition-all duration-300">
+              <b className="text-foreground/70 group-hover:text-foreground group-hover:underline transition-all duration-300">
                 Ivanrice
               </b>
             </span>
@@ -91,12 +91,12 @@ export default function TodoList() {
 
           <Link
             to="https://x.com/thebtjackson"
-            className="group hover:text-foreground/80 transition-all duration-300"
+            className="group hover:text-foreground group-hover:underline transition-all duration-300"
             target="_blank"
             rel="noopener noreferrer"
           >
             Design by{' '}
-            <b className="text-secondary/90 group-hover:text-foreground/70 transition-all duration-300">
+            <b className="text-foreground/70 group-hover:text-foreground transition-all duration-300">
               {' '}
               Brett
             </b>

@@ -6,7 +6,6 @@ import { Trash2Icon } from 'lucide-react'
 import { ReactNode } from 'react'
 import { Button } from '@/ui/button'
 import { useTaskContext } from '@/context/TaskContext'
-//import { AnimatedWrapper } from './AnimatedWrapper'
 
 export default function Task({ task }: { task: Task }) {
   const { taskRepeated } = useTaskContext()
@@ -21,29 +20,33 @@ export default function Task({ task }: { task: Task }) {
           <Loader />
         ) : (
           <Checkbox
+            id={`task-checkbox-${task.taskId}`}
             checked={taskState.checked}
             disabled={taskState.isLoading || taskState.isDeleting}
             onCheckedChange={(checked) =>
               completeTask({ taskId: task.taskId, isCompleted: checked as boolean, day: task.day })
             }
             className="border-secondary data-[state=checked]:border-primary peer"
+            aria-label={task.title}
           />
         )}
-        <div className="flex flex-nowrap justify-center items-start  gap-1">
-          <p
-            className={`py-0.5 -mt-1 transition-all duration-300 flex-1 leading-normal font-light px-1
+        <div className="flex flex-nowrap justify-center items-start  gap-4">
+          <label
+            htmlFor={`task-checkbox-${task.taskId}`}
+            className={`py-0.5 -mt-1 transition-all duration-300 flex-1 leading-normal font-light px-1 cursor-pointer
              ${taskState.checked ? 'line-through decoration-primary/80 text-secondary' : 'text-foreground/85'}
              ${taskState.isDeleting ? 'text-red-800/70 animate-pulse' : ''}
              ${isTaskRepeated ? 'bg-primary/40 rounded-sm' : ''}`}
           >
             {task.title}
-          </p>
+          </label>
           <Button
             size="icon"
             variant="destructive"
             className="-mt-1 opacity-0 p-1 w-[1.8rem] h-[1.5rem] bg-transparent text-foreground/55 shadow-none cursor-pointer
             hover:text-foreground/85 hover:bg-secondary/10 group-hover:opacity-100 transition-opacity duration-300 "
             asChild
+            aria-label="Eliminar tarea"
             onClick={() => removeTask({ taskId: task.taskId, day: task.day })}
           >
             <Trash2Icon strokeWidth={2.3} />
