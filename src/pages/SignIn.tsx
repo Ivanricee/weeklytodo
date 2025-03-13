@@ -49,7 +49,7 @@ export default function SignIn() {
             className={`shadow-none bg-transparent hidden text-sm font-normal text-primary p-0
               ${activeTab === 'sign-in' ? 'flex' : ''}`}
           >
-            Regsiter
+            Register
           </TabsTrigger>
           <TabsTrigger
             value="sign-in"
